@@ -6,8 +6,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/assets/:id', (req, res) => {
-  const { id } = req.params;
+const PORT = process.env.PORT || 3000;
+
+app.get(/\/assets\/(.*)/, (req, res) => {
+  let id = req.params[0];
+  
+  id = decodeURIComponent(id);
+  
   const data = id.split(';');
 
   const assets = data.map(item => {
@@ -97,3 +102,7 @@ app.get('/assets/:id', (req, res) => {
     </html>
   `);
 });
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+})
