@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -12,18 +10,18 @@ app.get('/assets/:id', (req, res) => {
   const { id } = req.params;
   const data = id.split(';');
 
-  const headers = [
-    "Asset Code",
-    "Serial Number",
-    "Asset Type",
-    "Category",
-    "Company/Vendor Name",
-    "Quantity",
-    "Purchase Date",
-    "Expiry/Warranty Date",
-    "Purchase Invoice/Ref No",
-    "Department/Location"
-  ];
+  const assets = data.map(item => {
+    const [column, value] = item.split('=');
+    return { column, value };
+  });
+
+  const headers = [];
+  const values = [];
+
+  assets.forEach((asset) => {
+    headers.push(asset.column);
+    values.push(asset.value);
+  });
 
   res.send(`
     <!DOCTYPE html>
@@ -90,7 +88,7 @@ app.get('/assets/:id', (req, res) => {
           ${headers.map((h, i) => `
             <tr>
               <th>${h}</th>
-              <td>${data[i] || ''}</td>
+              <td>${values[i] || ''}</td>
             </tr>
           `).join('')}
         </table>
@@ -99,8 +97,3 @@ app.get('/assets/:id', (req, res) => {
     </html>
   `);
 });
-
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-})
