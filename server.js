@@ -8,7 +8,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-app.get(/\/assets\/(.*)/, (req, res) => {
+app.get(/\/(.*)/, (req, res) => {
   let id = req.params[0];
   
   id = decodeURIComponent(id);
@@ -88,7 +88,6 @@ app.get(/\/assets\/(.*)/, (req, res) => {
     </head>
     <body>
       <div class="container">
-        <h2>Asset Details</h2>
         <table>
           ${headers.map((h, i) => `
             <tr>
